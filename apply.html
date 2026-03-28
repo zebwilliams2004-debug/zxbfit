@@ -7,6 +7,708 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZxbFit · Apply for Coaching</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:     #0a0a0a;
+    --offwhite:  #f0ede6;
+    --accent:    #c8f542;
+    --accent-dim:#8fc900;
+    --surface:   #141414;
+    --surface2:  #1c1c1c;
+    --border:    rgba(255,255,255,0.07);
+    --dim:       rgba(240,237,230,0.4);
+    --error:     #ff6b6b;
+    --success:   #c8f542;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--offwhite);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0 16px 80px;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  /* grain */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.03; pointer-events: none; z-index: 100;
+  }
+
+  /* blobs */
+  .blob { position: fixed; border-radius: 50%; filter: blur(130px); pointer-events: none; z-index: 0; }
+  .b1 { width: 500px; height: 500px; background: rgba(200,245,66,0.06); top: -150px; right: -120px; }
+  .b2 { width: 350px; height: 350px; background: rgba(200,245,66,0.03); bottom: 100px; left: -100px; }
+
+  .wrap {
+    width: 100%; max-width: 560px;
+    position: relative; z-index: 1;
+  }
+
+  /* ── Nav bar ── */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 0 0;
+    opacity: 0; animation: fadeUp .5s ease .1s forwards;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 3px; color: var(--offwhite);
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-back {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--dim); text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-back:hover { color: var(--offwhite); }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 48px 0 36px;
+    opacity: 0; animation: fadeUp .5s ease .2s forwards;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 10vw, 58px);
+    letter-spacing: 2px; line-height: .95;
+    color: var(--offwhite);
+  }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero-sub {
+    margin-top: 18px;
+    font-size: 14px; font-weight: 400;
+    color: var(--dim); line-height: 1.7;
+    max-width: 460px;
+  }
+
+  /* ── What's included ── */
+  .includes {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 20px 22px;
+    margin-bottom: 36px;
+    opacity: 0; animation: fadeUp .5s ease .3s forwards;
+  }
+  .includes-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .includes ul {
+    list-style: none;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6px 16px;
+  }
+  .includes li {
+    font-size: 12.5px; color: var(--dim);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .includes li::before {
+    content: '→';
+    color: var(--accent); font-size: 11px; flex-shrink: 0;
+  }
+
+  /* ── Form ── */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px 28px;
+    opacity: 0; animation: fadeUp .5s ease .35s forwards;
+  }
+
+  .form-section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--dim); margin: 24px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-section-title:first-child { margin-top: 0; }
+
+  .field-group {
+    display: flex; flex-direction: column; gap: 4px;
+    margin-bottom: 16px;
+  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  label {
+    font-size: 11.5px; font-weight: 600; letter-spacing: .3px;
+    color: var(--offwhite);
+  }
+  label .req { color: var(--accent); margin-left: 2px; }
+  label .hint {
+    font-weight: 400; color: var(--dim);
+    font-size: 10.5px; margin-left: 4px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 5px;
+    color: var(--offwhite);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    padding: 11px 14px;
+    outline: none;
+    transition: border-color .2s, background .2s;
+    -webkit-appearance: none;
+  }
+  input::placeholder, textarea::placeholder { color: rgba(240,237,230,0.2); }
+  input:focus, select:focus, textarea:focus {
+    border-color: rgba(200,245,66,0.4);
+    background: #1f1f1f;
+  }
+  input.error, select.error, textarea.error {
+    border-color: var(--error);
+  }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+  select option { background: #1c1c1c; color: var(--offwhite); }
+
+  /* Radio / checkbox groups */
+  .radio-group, .check-group {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-top: 2px;
+  }
+  .radio-group.inline, .check-group.inline {
+    flex-direction: row; flex-wrap: wrap; gap: 8px;
+  }
+  .radio-opt, .check-opt {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 5px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all .18s;
+    font-size: 13px;
+    user-select: none;
+  }
+  .radio-opt:hover, .check-opt:hover {
+    border-color: rgba(200,245,66,0.25);
+    background: #202020;
+  }
+  .radio-opt input[type=radio],
+  .check-opt input[type=checkbox] {
+    width: 16px; height: 16px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    border: none; padding: 0; background: none;
+  }
+  .radio-opt.selected, .check-opt.selected {
+    border-color: rgba(200,245,66,0.4);
+    background: rgba(200,245,66,0.06);
+  }
+
+  .field-error {
+    font-size: 11px; color: var(--error);
+    margin-top: 3px; display: none;
+  }
+  .field-error.show { display: block; }
+
+  /* ── Disclaimer ── */
+  .disclaimer {
+    background: rgba(200,245,66,0.05);
+    border: 1px solid rgba(200,245,66,0.15);
+    border-radius: 5px;
+    padding: 14px 16px;
+    margin: 20px 0 24px;
+    font-size: 12px; color: var(--dim); line-height: 1.6;
+  }
+  .disclaimer strong { color: var(--offwhite); }
+
+  .ack-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    cursor: pointer;
+  }
+  .ack-row input[type=checkbox] {
+    width: 17px; height: 17px; margin-top: 1px;
+    accent-color: var(--accent);
+    flex-shrink: 0; padding: 0; background: none; border: none;
+  }
+  .ack-row span { font-size: 13px; color: var(--dim); line-height: 1.5; }
+
+  /* ── Submit ── */
+  .submit-btn {
+    width: 100%; margin-top: 24px;
+    background: var(--accent);
+    color: var(--black);
+    border: none; border-radius: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 3px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative; overflow: hidden;
+  }
+  .submit-btn:hover {
+    background: #d4ff50;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 32px rgba(200,245,66,0.25);
+  }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled {
+    opacity: .5; cursor: not-allowed; transform: none;
+  }
+
+  /* ── Success screen ── */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    opacity: 0; animation: fadeUp .5s ease forwards;
+  }
+  .success-screen.show { display: block; }
+  .success-icon {
+    width: 72px; height: 72px;
+    background: rgba(200,245,66,0.12);
+    border: 2px solid rgba(200,245,66,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 24px;
+  }
+  .success-screen h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; letter-spacing: 2px; color: var(--offwhite);
+    margin-bottom: 12px;
+  }
+  .success-screen p { font-size: 14px; color: var(--dim); line-height: 1.7; }
+  .success-screen .accent { color: var(--accent); font-weight: 600; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center; margin-top: 40px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+    color: rgba(240,237,230,0.15);
+    opacity: 0; animation: fadeUp .5s ease .5s forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    .field-row { grid-template-columns: 1fr; }
+    .includes ul { grid-template-columns: 1fr; }
+    .form-card { padding: 24px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+
+<div class="wrap">
+
+  <nav class="nav">
+    <div class="nav-logo">Zxb<span>Fit</span></div>
+    <a class="nav-back" href="zxbfit-landing.html">← Back</a>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">1:1 Coaching Application</div>
+    <h1>LET'S BUILD<br><em>SOMETHING.</em></h1>
+    <p class="hero-sub">
+      Hi, my name is Zeb. I earned my B.S. in Kinesiology from Purdue and I'm currently in chiropractic school, continuing my education on the human body and performance. I take care of the hard part — the structure, programming, and planning — so you're left with one simple job: execute. Show up, follow the plan, and trust the process. Fill out the form below and we'll see if we're a good fit for each other.
+    </p>
+  </div>
+
+  <!-- What's included -->
+  <div class="includes">
+    <div class="includes-title">What's Included in 1:1 Coaching</div>
+    <ul>
+      <li>Weekly program design</li>
+      <li>Loom video form review</li>
+      <li>WhatsApp check-ins</li>
+      <li>Progressive overload tracking</li>
+      <li>Rehab & prehab strategies</li>
+      <li>Nutrition guidance</li>
+      <li>Offseason planning</li>
+      <li>Injury risk assessment</li>
+    </ul>
+  </div>
+
+  <!-- Form -->
+  <div class="form-card" id="formCard">
+    <form id="applyForm" novalidate>
+
+      <!-- SECTION 1 -->
+      <div class="form-section-title">The Basics</div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label for="fullName">Full Name <span class="req">*</span></label>
+          <input type="text" id="fullName" name="fullName" placeholder="John Smith" required>
+          <span class="field-error" id="err-fullName">Required</span>
+        </div>
+        <div class="field-group">
+          <label for="age">Age <span class="req">*</span></label>
+          <input type="number" id="age" name="age" placeholder="22" min="13" max="80" required>
+          <span class="field-error" id="err-age">Enter a valid age</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="email">Email <span class="req">*</span></label>
+        <input type="email" id="email" name="email" placeholder="you@email.com" required>
+        <span class="field-error" id="err-email">Enter a valid email</span>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label for="instagram">Instagram @ <span class="req">*</span>
+            <span class="hint">— primary contact</span>
+          </label>
+          <input type="text" id="instagram" name="instagram" placeholder="@yourhandle" required>
+          <span class="field-error" id="err-instagram">Required</span>
+        </div>
+        <div class="field-group">
+          <label for="whatsapp">WhatsApp Number</label>
+          <input type="tel" id="whatsapp" name="whatsapp" placeholder="+1 (555) 000-0000">
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div class="form-section-title">Training Background</div>
+
+      <div class="field-group">
+        <label>Training Experience <span class="req">*</span></label>
+        <div class="radio-group inline">
+          <label class="radio-opt">
+            <input type="radio" name="trainingAge" value="0-1 years" required>
+            0–1 years
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="trainingAge" value="1-3 years">
+            1–3 years
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="trainingAge" value="3-5 years">
+            3–5 years
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="trainingAge" value="5+ years">
+            5+ years
+          </label>
+        </div>
+        <span class="field-error" id="err-trainingAge">Please select one</span>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label for="daysPerWeek">Days Available / Week <span class="req">*</span></label>
+          <select id="daysPerWeek" name="daysPerWeek" required>
+            <option value="" disabled selected>Select</option>
+            <option>2–3 days</option>
+            <option>4 days</option>
+            <option>5 days</option>
+            <option>6 days</option>
+          </select>
+          <span class="field-error" id="err-daysPerWeek">Required</span>
+        </div>
+        <div class="field-group">
+          <label for="equipment">Equipment Access <span class="req">*</span></label>
+          <select id="equipment" name="equipment" required>
+            <option value="" disabled selected>Select</option>
+            <option>Full gym</option>
+            <option>Home gym (decent)</option>
+            <option>Minimal / bands only</option>
+            <option>Mix of both</option>
+          </select>
+          <span class="field-error" id="err-equipment">Required</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="currentGoal">Primary Goal <span class="req">*</span>
+          <span class="hint">— be specific</span>
+        </label>
+        <textarea id="currentGoal" name="currentGoal"
+          placeholder="e.g. Build muscle, look better, get stronger for football season..."
+          required></textarea>
+        <span class="field-error" id="err-currentGoal">Required</span>
+      </div>
+
+      <div class="field-group">
+        <label>Any current injuries or pain? <span class="req">*</span></label>
+        <div class="radio-group inline">
+          <label class="radio-opt">
+            <input type="radio" name="injuries" value="No" required> No
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="injuries" value="Yes – minor"> Yes – minor
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="injuries" value="Yes – significant"> Yes – significant
+          </label>
+        </div>
+        <span class="field-error" id="err-injuries">Please select one</span>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div class="form-section-title">Commitment & Timing</div>
+
+      <div class="field-group">
+        <label>Coaching Tier You're Interested In <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt">
+            <input type="radio" name="tier" value="4-Week" required>
+            4-Week — Jump in, test the process
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="tier" value="8-Week">
+            8-Week — Build real momentum
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="tier" value="12-Week">
+            12-Week — Full transformation, recommended
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="tier" value="Ongoing / Not sure yet">
+            Ongoing / Not sure yet
+          </label>
+        </div>
+        <span class="field-error" id="err-tier">Please select one</span>
+      </div>
+
+      <div class="field-group">
+        <label>Preferred Start Date <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt">
+            <input type="radio" name="startDate" value="ASAP" required> ASAP
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="startDate" value="Within 2 weeks"> Within 2 weeks
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="startDate" value="2-4 weeks"> 2–4 weeks from now
+          </label>
+        </div>
+        <span class="field-error" id="err-startDate">Please select one</span>
+      </div>
+
+      <div class="field-group">
+        <label for="hearAbout">How did you find me?</label>
+        <select id="hearAbout" name="hearAbout">
+          <option value="" disabled selected>Select</option>
+          <option>Instagram (@ZxbFit)</option>
+          <option>Instagram (@ZxbPerformance)</option>
+          <option>Referred by a friend</option>
+          <option>Bought a one-off program</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label for="extra">Anything else I should know?
+          <span class="hint">— optional</span>
+        </label>
+        <textarea id="extra" name="extra"
+          placeholder="Schedule constraints, sport you play, specific weaknesses, etc."
+          style="min-height:70px"></textarea>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="disclaimer">
+        <strong>Heads up:</strong> This is an application, not a guarantee of acceptance.
+        I'll review your application and reach out via Instagram DM within 1–2 business days
+        to discuss fit, pricing, and next steps. If accepted, you'll receive a detailed
+        onboarding form before we begin.
+      </div>
+
+      <label class="ack-row">
+        <input type="checkbox" id="ack" name="ack" required>
+        <span>I understand this is an application and that ZxbFit will contact me via Instagram to discuss next steps. <span class="req">*</span></span>
+      </label>
+      <span class="field-error" id="err-ack">You must acknowledge this to apply</span>
+
+      <button type="submit" class="submit-btn" id="submitBtn">
+        SUBMIT APPLICATION
+      </button>
+
+    </form>
+  </div>
+
+  <!-- Success -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✓</div>
+    <h2>Application Received</h2>
+    <p>
+      Thanks for applying — I'll review your info and hit you on Instagram
+      (<span class="accent" id="confirmHandle"></span>) within 1–2 business days.<br><br>
+      In the meantime, follow <span class="accent">@ZxbFit</span> for daily training content
+      and check out the one-off programs if you want to get started now.
+    </p>
+  </div>
+
+  <div class="footer">© 2025 ZxbFit · All rights reserved</div>
+</div>
+
+<script>
+  // ── Radio / checkbox selection highlight ──
+  document.querySelectorAll('.radio-opt, .check-opt').forEach(opt => {
+    const input = opt.querySelector('input');
+    const name = input.name;
+
+    // Init checked state
+    if (input.checked) opt.classList.add('selected');
+
+    input.addEventListener('change', () => {
+      if (input.type === 'radio') {
+        document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+          r.closest('.radio-opt')?.classList.remove('selected');
+        });
+      }
+      if (input.checked) opt.classList.add('selected');
+      else opt.classList.remove('selected');
+    });
+  });
+
+  // ── Validation helpers ──
+  function showErr(id, msg) {
+    const el = document.getElementById('err-' + id);
+    if (el) { el.textContent = msg || el.textContent; el.classList.add('show'); }
+    const input = document.getElementById(id) ||
+                  document.querySelector(`[name="${id}"]`);
+    input?.classList?.add('error');
+  }
+  function clearErr(id) {
+    const el = document.getElementById('err-' + id);
+    if (el) el.classList.remove('show');
+    const input = document.getElementById(id);
+    input?.classList?.remove('error');
+  }
+
+  // Live clear on change
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('input', () => clearErr(el.name || el.id));
+    el.addEventListener('change', () => clearErr(el.name || el.id));
+  });
+
+  // ── Form submit ──
+  document.getElementById('applyForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    // Required text/email/number fields
+    ['fullName','age','email','instagram'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) { showErr(id); valid = false; }
+    });
+    // Email format
+    const email = document.getElementById('email');
+    if (email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+      showErr('email', 'Enter a valid email'); valid = false;
+    }
+    // Selects
+    ['daysPerWeek','equipment'].forEach(id => {
+      if (!document.getElementById(id).value) { showErr(id); valid = false; }
+    });
+    // Textarea
+    if (!document.getElementById('currentGoal').value.trim()) {
+      showErr('currentGoal'); valid = false;
+    }
+    // Radio groups
+    ['trainingAge','injuries','tier','startDate'].forEach(name => {
+      if (!document.querySelector(`input[name="${name}"]:checked`)) {
+        showErr(name); valid = false;
+      }
+    });
+    // Ack checkbox
+    if (!document.getElementById('ack').checked) {
+      showErr('ack'); valid = false;
+    }
+
+    if (!valid) {
+      document.querySelector('.field-error.show')
+        ?.closest('.field-group, .form-card')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // ── Collect data ──
+    const data = {
+      fullName:    document.getElementById('fullName').value.trim(),
+      age:         document.getElementById('age').value,
+      email:       document.getElementById('email').value.trim(),
+      instagram:   document.getElementById('instagram').value.trim(),
+      whatsapp:    document.getElementById('whatsapp').value.trim(),
+      trainingAge: document.querySelector('input[name="trainingAge"]:checked')?.value,
+      daysPerWeek: document.getElementById('daysPerWeek').value,
+      equipment:   document.getElementById('equipment').value,
+      currentGoal: document.getElementById('currentGoal').value.trim(),
+      injuries:    document.querySelector('input[name="injuries"]:checked')?.value,
+      tier:        document.querySelector('input[name="tier"]:checked')?.value,
+      startDate:   document.querySelector('input[name="startDate"]:checked')?.value,
+      hearAbout:   document.getElementById('hearAbout').value,
+      extra:       document.getElementById('extra').value.trim(),
+      submittedAt: new Date().toISOString(),
+    };
+
+    // ── Send to Google Apps Script ──
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'SENDING...';
+
+    try {
+      // REPLACE THIS URL with your deployed Apps Script Web App URL
+      const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAD3cLZ-qs7NaDGqhSwzXiEA_U--LyD0NIk3kULRcauC9_HeHhC7CemJLls3wAeQp0iA/exec';
+
+      if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbxAD3cLZ-qs7NaDGqhSwzXiEA_U--LyD0NIk3kULRcauC9_HeHhC7CemJLls3wAeQp0iA/exec') {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+      }
+      // Show success regardless (no-cors means we can't read the response)
+      document.getElementById('confirmHandle').textContent = data.instagram;
+      document.getElementById('formCard').style.display = 'none';
+      const success = document.getElementById('successScreen');
+      success.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'SUBMIT APPLICATION';
+      alert('Something went wrong. Please try again or DM me on Instagram.');
+    }
+  });
+</script>
+</body>
+</html>
 
   :root {
     --black:     #0a0a0a;
