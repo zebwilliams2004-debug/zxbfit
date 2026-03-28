@@ -677,14 +677,35 @@
       const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAD3cLZ-qs7NaDGqhSwzXiEA_U--LyD0NIk3kULRcauC9_HeHhC7CemJLls3wAeQp0iA/exec';
 
       if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbxAD3cLZ-qs7NaDGqhSwzXiEA_U--LyD0NIk3kULRcauC9_HeHhC7CemJLls3wAeQp0iA/exec') {
-        await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
+        // Use a hidden iframe + form to POST to Apps Script (avoids CORS)
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = APPS_SCRIPT_URL;
+        form.target = 'hidden_iframe';
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'payload';
+        input.value = JSON.stringify(data);
+        form.appendChild(input);
+        // Also send each field individually for Apps Script compatibility
+        const jsonInput = document.createElement('input');
+        jsonInput.type = 'hidden';
+        jsonInput.name = 'data';
+        jsonInput.value = JSON.stringify(data);
+        form.appendChild(jsonInput);
+        document.body.appendChild(form);
+        let iframe = document.getElementById('hidden_iframe');
+        if (!iframe) {
+          iframe = document.createElement('iframe');
+          iframe.name = 'hidden_iframe';
+          iframe.id = 'hidden_iframe';
+          iframe.style.display = 'none';
+          document.body.appendChild(iframe);
+        }
+        form.submit();
+        document.body.removeChild(form);
       }
-      // Show success regardless (no-cors means we can't read the response)
+      // Show success
       document.getElementById('confirmHandle').textContent = data.instagram;
       document.getElementById('formCard').style.display = 'none';
       const success = document.getElementById('successScreen');
