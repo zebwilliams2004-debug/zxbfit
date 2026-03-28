@@ -12,7 +12,199 @@
   --bg2: #161613;
   --offwhite: #f0ede6;
   --accent: #c8f542;
+  --accent-dim: rgba(200,245,66,0.12);<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZxbFit</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f0f0d;
+  --bg2: #161613;
+  --offwhite: #f0ede6;
+  --accent: #c8f542;
   --accent-dim: rgba(200,245,66,0.12);
+  --accent-border: rgba(200,245,66,0.22);
+  --border: rgba(255,255,255,0.07);
+  --text-dim: rgba(240,237,230,0.42);
+  --text-mid: rgba(240,237,230,0.68);
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--offwhite);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px 80px;
+  position: relative;
+  overflow-x: hidden;
+}
+body::after {
+  content: '';
+  position: fixed;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(200,245,66,0.045) 0%, transparent 70%);
+  top: -200px; right: -200px;
+  pointer-events: none;
+  z-index: 0;
+}
+body::before {
+  content: '';
+  position: fixed;
+  width: 500px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(232,213,176,0.03) 0%, transparent 70%);
+  bottom: 0; left: -100px;
+  pointer-events: none;
+  z-index: 0;
+}
+.container { width: 100%; max-width: 460px; position: relative; z-index: 1; }
+.header { text-align: center; padding: 56px 0 40px; opacity: 0; animation: fadeUp 0.7s ease forwards; }
+.avatar {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: linear-gradient(145deg, #c8f542 0%, #9abe2a 100%);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 22px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px; color: #0a0a0a; letter-spacing: 1px;
+  position: relative;
+  box-shadow: 0 0 40px rgba(200,245,66,0.15), 0 4px 20px rgba(0,0,0,0.4);
+}
+.avatar::after {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  border: 1px solid rgba(200,245,66,0.2);
+}
+.wordmark { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 4px; color: var(--offwhite); line-height: 1; }
+.wordmark span { color: var(--accent); }
+.tagline { margin-top: 12px; font-size: 13.5px; font-weight: 300; font-style: italic; color: var(--text-mid); letter-spacing: 0.3px; line-height: 1.65; }
+.cred-row { display: flex; justify-content: center; gap: 6px; margin-top: 18px; flex-wrap: wrap; }
+.cred { font-family: 'DM Mono', monospace; font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--border); padding: 4px 10px; border-radius: 2px; }
+.divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent); margin: 4px 0 30px; }
+.section-label { font-family: 'DM Mono', monospace; font-size: 9.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; padding-left: 2px; }
+.links-group { display: flex; flex-direction: column; gap: 9px; margin-bottom: 30px; }
+.link-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 15px 18px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg2); text-decoration: none; color: var(--offwhite);
+  transition: all 0.22s ease; opacity: 0; animation: fadeUp 0.5s ease forwards;
+  position: relative; overflow: hidden;
+}
+.link-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--accent); transform: scaleY(0); transition: transform 0.22s ease;
+  transform-origin: bottom; border-radius: 0 2px 2px 0;
+}
+.link-card:hover { background: rgba(200,245,66,0.05); border-color: var(--accent-border); transform: translateX(3px); }
+.link-card:hover::before { transform: scaleY(1); }
+.link-card.featured { background: rgba(200,245,66,0.07); border-color: var(--accent-border); }
+.link-card.featured::before { transform: scaleY(1); }
+.card-left { display: flex; align-items: center; gap: 14px; }
+.card-icon {
+  width: 38px; height: 38px; border-radius: 6px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-family: 'DM Mono', monospace; color: var(--accent); flex-shrink: 0;
+}
+.link-card.featured .card-icon { background: var(--accent-dim); border-color: var(--accent-border); }
+.card-title { font-size: 13.5px; font-weight: 600; letter-spacing: 0.2px; }
+.card-sub { font-size: 11px; color: var(--text-dim); margin-top: 3px; font-weight: 400; }
+.card-arrow { color: var(--text-dim); font-size: 15px; transition: transform 0.2s ease, color 0.2s ease; flex-shrink: 0; }
+.link-card:hover .card-arrow { color: var(--accent); transform: translateX(3px); }
+.pill { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 1px; text-transform: uppercase; background: var(--accent); color: #0a0a0a; padding: 2px 7px; border-radius: 2px; font-weight: 600; margin-left: 8px; vertical-align: middle; }
+.footer { text-align: center; margin-top: 44px; font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(240,237,230,0.15); letter-spacing: 1.5px; text-transform: uppercase; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+.link-card:nth-child(1) { animation-delay: 0.12s; }
+.link-card:nth-child(2) { animation-delay: 0.19s; }
+.link-card:nth-child(3) { animation-delay: 0.26s; }
+.link-card:nth-child(4) { animation-delay: 0.33s; }
+.link-card:nth-child(5) { animation-delay: 0.40s; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="avatar">ZXB</div>
+    <div class="wordmark">Zxb<span>Fit</span></div>
+    <div class="tagline">
+      Personalized coaching built around your body and your needs.<br>
+      Movement quality, programming, and real results — all in one place.
+    </div>
+    <div class="cred-row">
+      <span class="cred">NASM-CPT</span>
+      <span class="cred">B.S. Kinesiology</span>
+      <span class="cred">DC Student</span>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="section-label">1:1 Coaching</div>
+  <div class="links-group">
+    <a class="link-card featured" href="https://zebwilliams2004-debug.github.io/zxbfit/apply.html" target="_blank">
+      <div class="card-left">
+        <div class="card-icon">◈</div>
+        <div>
+          <div class="card-title">Apply for 1:1 Coaching <span class="pill">Open</span></div>
+          <div class="card-sub">Fully individualized programming customized specifically for your goals and needs</div>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
+  <div class="section-label">Programs</div>
+  <div class="links-group">
+    <a class="link-card" href="https://r.newie.app/4vzaz5y5n0sl" target="_blank">
+      <div class="card-left">
+        <div class="card-icon">↑</div>
+        <div>
+          <div class="card-title">6-Week Upper / Lower</div>
+          <div class="card-sub">Strength &amp; Hypertrophy · $30</div>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a class="link-card" href="https://r.newie.app/3tcem4tqtjy6" target="_blank">
+      <div class="card-left">
+        <div class="card-icon">⊕</div>
+        <div>
+          <div class="card-title">6-Week Push / Pull / Legs</div>
+          <div class="card-sub">Strength &amp; Hypertrophy · $30</div>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a class="link-card" href="https://r.newie.app/2qggvn2c8xau" target="_blank">
+      <div class="card-left">
+        <div class="card-icon">◻</div>
+        <div>
+          <div class="card-title">6-Week Full Body</div>
+          <div class="card-sub">Strength &amp; Hypertrophy · $30</div>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
+  <div class="section-label">Find Me</div>
+  <div class="links-group">
+    <a class="link-card" href="https://instagram.com/zxbfit" target="_blank">
+      <div class="card-left">
+        <div class="card-icon">@</div>
+        <div>
+          <div class="card-title">Instagram</div>
+          <div class="card-sub">@zxbfit · Training content, breakdowns, and more</div>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
+  <div class="footer">© 2025 ZxbFit · All rights reserved</div>
+</div>
+</body>
+</html>
   --accent-border: rgba(200,245,66,0.22);
   --border: rgba(255,255,255,0.07);
   --text-dim: rgba(240,237,230,0.42);
